@@ -35,7 +35,7 @@ def calc_pos_mod(list):
 
 
 if __name__=="__main__":
-	f = open('input-2.txt', 'r')
+	f = open('input', 'r')
 	
 	l = f.readlines()
 	l = [x.strip().split() for x in l]

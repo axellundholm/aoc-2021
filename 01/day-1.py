@@ -20,7 +20,7 @@ def filter_list(measurements):
 
 
 if __name__=="__main__":
-	f = open('input-1.txt', 'r')
+	f = open('input', 'r')
 	
 	l = f.readlines()
 	l = [int(x.strip()) for x in l]
