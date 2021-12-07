@@ -25,3 +25,4 @@ if __name__=="__main__":
 
 	print("Answer to Part One: " + str(simulate_fish(fish, 80)))
 	print("Answer to Part Two: " + str(simulate_fish(fish, 256)))
+	
