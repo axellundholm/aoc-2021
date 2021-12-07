@@ -9,10 +9,7 @@ def simulate_fish(fish, nof_days):
 		fish[6] += new_fish
 		fish.append(new_fish)
 
-	sum = 0
-	for f in fish:
-		sum += f
-	return sum
+	return sum(fish)
 
 
 if __name__=="__main__":
