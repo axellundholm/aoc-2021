@@ -30,21 +30,20 @@ if __name__=="__main__":
 
 	x_tgt = range(l[0][0], l[0][1] + 1)
 	y_tgt = range(l[1][0], l[1][1] + 1)
+	vel_x_max = x_tgt[-1]
+	vel_y_min = y_tgt[0]
 
-	x_min, x_max = x_tgt[0], x_tgt[-1]
-	y_min, y_max = y_tgt[0], y_tgt[-1]
+	max_hit_y = 0
+	nof_hits = 0
 
-	y_max_max = 0
-	hits = 0
-
-	for x in range(x_max + 1):
-		for y in range(y_min, -y_min):
+	for x in range(vel_x_max + 1):
+		for y in range(vel_y_min, -vel_y_min):
 			y_max = fire_probe([x, y], x_tgt, y_tgt)
 			if y_max is not False:
-				y_max_max = max(y_max, y_max_max)
-				hits += 1
+				max_hit_y = max(y_max, max_hit_y)
+				nof_hits += 1
 
-	print("Answer to Part One: " + str(y_max_max))
-	print("Answer to Part Two: " + str(hits))
+	print("Answer to Part One: " + str(max_hit_y))
+	print("Answer to Part Two: " + str(nof_hits))
 
 
