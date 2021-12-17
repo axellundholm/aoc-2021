@@ -3,36 +3,35 @@ import numpy as np
 
 def find_low_risk(cave):
 
+	global adj_que, acc_risk, cost_que, tmp_que
+
 	rows = len(cave)
 	cols = len(cave[0])
 
-	acc_risk = [[False for i in range(len(cave[0]))] for j in range(len(cave))]
+	acc_risk = [['NaN' for i in range(len(cave[0]))] for j in range(len(cave))]
 	acc_risk[0][0] = 0
 
 	adj_que = [[0] * 2]
+	cost_que = []
+	tmp_que = []
 	
-	while acc_risk[len(acc_risk) - 1][len(acc_risk[0]) - 1] is False:
+	while acc_risk[len(acc_risk) - 1][len(acc_risk[0]) - 1] is 'NaN':
+
+		while len(tmp_que) > 0:
+			adj_que.append(tmp_que.pop())
 
 		adj_que = find_adj(adj_que, rows, cols) #for now
-		cost_que = list(adj_que)
+
+
 
 		while len(cost_que) > 0:
-			calc_acc_risk(cost_que.pop(0), cave, acc_risk)
+			calc_acc_risk(cost_que.pop(0), cave, acc_risk, rows, cols)
 
 	return acc_risk[rows - 1][cols - 1]
 
-def calc_acc_risk(loc, cave, acc_risk):
-
-	if loc[0] == 0:
-		cost = acc_risk[loc[0]][loc[1] - 1]
-	elif loc[1] == 0:
-		cost = acc_risk[loc[0] - 1][loc[1]]
-	else:
-		cost = min(acc_risk[loc[0]][loc[1] - 1], acc_risk[loc[0] - 1][loc[1]])
-	
-	acc_risk[loc[0]][loc[1]] = cost + cave[loc[0]][loc[1]]
-
 def find_adj(adj_que, rows, cols):
+
+	global acc_risk, cost_que, tmp_que
 
 	adj_loc = []
 
@@ -43,7 +42,36 @@ def find_adj(adj_que, rows, cols):
 		if loc[1] != cols - 1 and [loc[0], loc[1] + 1] not in adj_loc: # right
 			adj_loc.append([loc[0], loc[1] + 1]) 
 
+		if loc[0] != 0 and [loc[0] - 1, loc[1]] not in adj_loc:
+			adj_loc.append([loc[0] - 1, loc[1]]) 
+
+		if loc[1] != 0 and [loc[0], loc[1] - 1] not in adj_loc:
+			adj_loc.append([loc[0], loc[1] - 1]) 
+
+	for x in adj_loc:
+		if acc_risk[x[0]][x[1]] == 'NaN':
+			tmp_que.append(x)
+
 	return adj_loc
+
+def calc_acc_risk(loc, cave, acc_risk, rows, cols):
+
+	global adj_que
+
+	cost = 'NaN'
+
+	if loc[0] != 0:
+		cost = min(cost, acc_risk[loc[0] - 1][loc[1]])
+	if loc[0] != rows - 1:
+		cost = min(cost, acc_risk[loc[0] + 1][loc[1]])
+	if loc[1] != 0:
+		cost = min(cost, acc_risk[loc[0]][loc[1] - 1])
+	if loc[1] != cols - 1:
+		cost = min(cost, acc_risk[loc[0]][loc[1] + 1])
+
+	if cost + cave[loc[0]][loc[1]] < acc_risk[loc[0]][loc[1]]:
+		acc_risk[loc[0]][loc[1]] = cost + cave[loc[0]][loc[1]]
+		adj_que.append([loc[0], loc[1]])
 
 def build_large_cave(cave, scale):
 
@@ -63,7 +91,7 @@ def build_large_cave(cave, scale):
 
 
 if __name__=="__main__":
-	f = open('input', 'r')
+	f = open('test-input', 'r')
 	
 	l = f.readlines()
 	cave = [[int(i) for i in list(x.strip())] for x in l]
